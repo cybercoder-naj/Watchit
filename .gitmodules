@@ -1,0 +1,3 @@
+[submodule "Watchit-server"]
+	path = Watchit-server
+	url = git@github.com:cybercoder-naj/Watchit-server.git
