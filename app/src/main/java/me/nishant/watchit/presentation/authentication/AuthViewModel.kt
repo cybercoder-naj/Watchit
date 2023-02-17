@@ -13,8 +13,11 @@ class AuthViewModel @Inject constructor() : ViewModel() {
     val state: State<AuthScreenState> get() = _state
 
     sealed class AuthScreenEvent {
+        class EditFirstName(val firstName: String) : AuthScreenEvent()
+        class EditLastName(val lastName: String) : AuthScreenEvent()
         class EditEmail(val email: String) : AuthScreenEvent()
         class EditPassword(val password: String) : AuthScreenEvent()
+        class EditCfmPassword(val password: String) : AuthScreenEvent()
         object LoginUser : AuthScreenEvent()
         object RegisterUser : AuthScreenEvent()
         object SwapType : AuthScreenEvent()
@@ -22,8 +25,11 @@ class AuthViewModel @Inject constructor() : ViewModel() {
 
     fun onEvent(event: AuthScreenEvent) {
         when (event) {
+            is AuthScreenEvent.EditFirstName -> _state.value = state.value.copy(email = event.firstName)
+            is AuthScreenEvent.EditLastName -> _state.value = state.value.copy(email = event.lastName)
             is AuthScreenEvent.EditEmail -> _state.value = state.value.copy(email = event.email)
             is AuthScreenEvent.EditPassword -> _state.value = state.value.copy(password = event.password)
+            is AuthScreenEvent.EditCfmPassword -> _state.value = state.value.copy(confirmPwd = event.password)
             AuthScreenEvent.LoginUser -> {
                 // TODO
             }

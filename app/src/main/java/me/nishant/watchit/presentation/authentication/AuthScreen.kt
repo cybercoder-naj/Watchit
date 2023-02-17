@@ -1,9 +1,6 @@
 package me.nishant.watchit.presentation.authentication
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -14,15 +11,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import me.nishant.watchit.presentation.authentication.AuthViewModel.AuthScreenEvent.*
-import me.nishant.watchit.presentation.authentication.components.HintTextField
+import me.nishant.watchit.presentation.authentication.components.LabelledTextField
 import me.nishant.watchit.presentation.authentication.components.PasswordTextField
 import me.nishant.watchit.presentation.ui.theme.WatchitTheme
 
@@ -35,7 +30,8 @@ fun AuthScreen(viewModel: AuthViewModel = viewModel()) {
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxHeight()
+            .fillMaxWidth(.5f),
         verticalArrangement = Arrangement.spacedBy(
             space = 8.dp,
             alignment = Alignment.CenterVertically
@@ -47,36 +43,53 @@ fun AuthScreen(viewModel: AuthViewModel = viewModel()) {
             color = MaterialTheme.colors.primary,
             style = MaterialTheme.typography.h4,
         )
+        Spacer(modifier = Modifier.height(12.dp))
         if (!state.returningUser) {
-            HintTextField(
-                value = state.firstName,
-                onValueChanged = { viewModel.onEvent(EditEmail(it)) },
-                hintText = "Enter your first name..."
-            )
+            LabelledTextField(label = "First name: ") {
+                OutlinedTextField(
+                    value = state.firstName,
+                    onValueChange = { viewModel.onEvent(EditFirstName(it)) },
+                    modifier = Modifier.width(220.dp)
+                )
+            }
+            LabelledTextField(label = "Last name: ") {
+                OutlinedTextField(
+                    value = state.lastName,
+                    onValueChange = {
+                        viewModel.onEvent(EditLastName(it))
+                    },
+                    modifier = Modifier.width(220.dp)
+                )
+            }
+        }
+        LabelledTextField(label = "Email: ") {
             OutlinedTextField(
-                value = state.lastName,
+                value = state.email,
                 onValueChange = {
                     viewModel.onEvent(EditEmail(it))
-                })
+                },
+                modifier = Modifier.width(220.dp)
+            )
         }
-        OutlinedTextField(
-            value = state.email,
-            onValueChange = {
-                viewModel.onEvent(EditEmail(it))
-            })
-        PasswordTextField(
-            value = state.password,
-            onValueChanged = { viewModel.onEvent(EditPassword(it)) },
-            pwdVisibility = pwdVisibility,
-            onTogglePwdVisibility = { pwdVisibility = !pwdVisibility }
-        )
-        if (!state.returningUser) {
+        LabelledTextField(label = "Password: ") {
             PasswordTextField(
-                value = state.confirmPwd,
+                value = state.password,
                 onValueChanged = { viewModel.onEvent(EditPassword(it)) },
                 pwdVisibility = pwdVisibility,
-                onTogglePwdVisibility = { pwdVisibility = !pwdVisibility }
+                onTogglePwdVisibility = { pwdVisibility = !pwdVisibility },
+                modifier = Modifier.width(220.dp)
             )
+        }
+        if (!state.returningUser) {
+            LabelledTextField(label = "Confirm: ") {
+                PasswordTextField(
+                    value = state.confirmPwd,
+                    onValueChanged = { viewModel.onEvent(EditPassword(it)) },
+                    pwdVisibility = pwdVisibility,
+                    onTogglePwdVisibility = { pwdVisibility = !pwdVisibility },
+                    modifier = Modifier.width(220.dp)
+                )
+            }
         }
         Button(
             onClick = { viewModel.onEvent(LoginUser) },
